@@ -1,0 +1,14 @@
+# Binary files
+*.o
+*.a
+*.so
+*.dll
+
+# CUTEst installation
+archdefs/
+cutest/
+sif/
+sifdecode/
+problems/
+include/
+
