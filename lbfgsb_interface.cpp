@@ -1,47 +1,11 @@
-#include <iostream>
-#include <Eigen/Core>
+#include "interface.h"
 
-extern "C" {
-
-#include <cutest.h>
-
-// Fortran L-BFGS-B function
-void setulb_(
-    const int* n, const int* m,
-    double* x, const double* l, const double* u, const int* nbd,
-    double* f, double* g,
-    const double* factr, const double* pgtol,
-    double* wa, int* iwa,
-    int* itask, const int* iprint,
-    int* icsave, int* lsave, int* isave, double* dsave
-);
-
-}
-
-// Problem class
-class CUTEstProblem
-{
-private:
-    using Vector = Eigen::Matrix<doublereal, Eigen::Dynamic, 1>;
-    integer n;
-public:
-    CUTEstProblem(integer n_) : n(n_) {}
-
-    doublereal operator()(const Vector& x, Vector& grad)
-    {
-        integer status;  // Exit flag from CUTEst tools
-        logical comp_grad = 1;  // Compute gradient
-        doublereal fx;
-        CUTEST_uofg(&status, &n, x.data(), &fx, grad.data(), &comp_grad);
-        if(status)
-        {
-            throw std::runtime_error("** CUTEst error");
-        }
-        return fx;
-    }
-};
-
-int main()
+void lbfgsb_stat(
+    int& nvar, int& niter, int& nfun,
+    double& objval, double& proj_grad,
+    double& setup_time, double& solve_time,
+    bool verbose
+)
 {
     using Vector = Eigen::Matrix<doublereal, Eigen::Dynamic, 1>;
     using IntVector = Eigen::VectorXi;
@@ -56,7 +20,7 @@ int main()
     if(ierr)
     {
         std::cout << "Error opening file OUTSDIF.d.\nAborting.\n";
-        return 1;
+        return;
     }
 
     // Determine problem size
@@ -68,9 +32,10 @@ int main()
     if(status)
     {
         std::cout << "** CUTEst error, status = " << status << ", aborting\n";
-        return 1;
+        return;
     }
-    std::cout << "nvar = " << CUTEst_nvar << std::endl;
+    if(verbose)
+        std::cout << "nvar = " << CUTEst_nvar << std::endl;
 
     // Reserve memory for variables, bounds, and multipliers,
     // and call appropriate initialization routine for CUTEst
@@ -86,11 +51,14 @@ int main()
     if(status)
     {
         std::cout << "** CUTEst error, status = " << status << ", aborting\n";
-        return status;
+        return;
     }
-    std::cout << "x0 = " <<  x.transpose().head(10) << " ... " <<  x.transpose().tail(10) << std::endl;
-    std::cout << "lb = " << lb.transpose().head(10) << " ... " << lb.transpose().tail(10) << std::endl;
-    std::cout << "ub = " << ub.transpose().head(10) << " ... " << ub.transpose().tail(10) << std::endl << std::endl;
+    if(verbose)
+    {
+        std::cout << "x0 = " <<  x.transpose().head(10) << " ... " <<  x.transpose().tail(10) << std::endl;
+        std::cout << "lb = " << lb.transpose().head(10) << " ... " << lb.transpose().tail(10) << std::endl;
+        std::cout << "ub = " << ub.transpose().head(10) << " ... " << ub.transpose().tail(10) << std::endl << std::endl;
+    }
 
     // Algorithm parameters
     const integer param_m = 6;
@@ -164,17 +132,16 @@ int main()
     doublereal calls[4], time[2];
     CUTEST_ureport(&status, calls, time);
 
-    std::cout << "x = " << x.transpose().head(5) << " ... " << x.transpose().tail(5) << std::endl << std::endl;
+    if(verbose)
+        std::cout << "x = " << x.transpose().head(5) << " ... " << x.transpose().tail(5) << std::endl << std::endl;
 
-    std::cout << "# variables           = " << CUTEst_nvar << std::endl;
-    std::cout << "# iterations          = " << i << std::endl;
-    std::cout << "# function calls      = " << calls[0] << std::endl;
-    std::cout << "Final f               = " << fx << std::endl;
-    std::cout << "Final ||proj_grad||   = " << dsave[12] << std::endl;
-    std::cout << "Setup time            = " << time[0] << " s" << std::endl;
-    std::cout << "Solve time            = " << time[1] << " s" << std::endl;
+    nvar = CUTEst_nvar;
+    niter = i;
+    nfun = calls[0];
+    objval = fx;
+    proj_grad = dsave[12];
+    setup_time = time[0];
+    solve_time = time[1];
 
     CUTEST_uterminate(&status);
-
-    return 0;
 }

@@ -1,37 +1,12 @@
-#include <iostream>
-#include <Eigen/Core>
-
-extern "C" {
-#include <cutest.h>
-}
-
+#include "interface.h"
 #include <LBFGSB.h>
 using namespace LBFGSpp;
 
-// Problem class
-class CUTEstProblem
-{
-private:
-    using Vector = Eigen::Matrix<doublereal, Eigen::Dynamic, 1>;
-    integer n;
-public:
-    CUTEstProblem(integer n_) : n(n_) {}
-
-    doublereal operator()(const Vector& x, Vector& grad)
-    {
-        integer status;  // Exit flag from CUTEst tools
-        logical comp_grad = 1;  // Compute gradient
-        doublereal fx;
-        CUTEST_uofg(&status, &n, x.data(), &fx, grad.data(), &comp_grad);
-        if(status)
-        {
-            throw std::runtime_error("** CUTEst error");
-        }
-        return fx;
-    }
-};
-
-int main()
+void lbfgspp_stat(
+    int& nvar, int& niter, int& nfun,
+    double& objval, double& proj_grad,
+    double& setup_time, double& solve_time,
+    bool verbose)
 {
     using Vector = Eigen::Matrix<doublereal, Eigen::Dynamic, 1>;
 
@@ -45,7 +20,7 @@ int main()
     if(ierr)
     {
         std::cout << "Error opening file OUTSDIF.d.\nAborting.\n";
-        return 1;
+        return;
     }
 
     // Determine problem size
@@ -57,9 +32,10 @@ int main()
     if(status)
     {
         std::cout << "** CUTEst error, status = " << status << ", aborting\n";
-        return 1;
+        return;
     }
-    std::cout << "nvar = " << CUTEst_nvar << std::endl;
+    if(verbose)
+        std::cout << "nvar = " << CUTEst_nvar << std::endl;
 
     // Reserve memory for variables, bounds, and multipliers,
     // and call appropriate initialization routine for CUTEst
@@ -75,11 +51,14 @@ int main()
     if(status)
     {
         std::cout << "** CUTEst error, status = " << status << ", aborting\n";
-        return status;
+        return;
     }
-    std::cout << "x0 = " <<  x.transpose().head(10) << " ... " <<  x.transpose().tail(10) << std::endl;
-    std::cout << "lb = " << lb.transpose().head(10) << " ... " << lb.transpose().tail(10) << std::endl;
-    std::cout << "ub = " << ub.transpose().head(10) << " ... " << ub.transpose().tail(10) << std::endl << std::endl;
+    if(verbose)
+    {
+        std::cout << "x0 = " <<  x.transpose().head(10) << " ... " <<  x.transpose().tail(10) << std::endl;
+        std::cout << "lb = " << lb.transpose().head(10) << " ... " << lb.transpose().tail(10) << std::endl;
+        std::cout << "ub = " << ub.transpose().head(10) << " ... " << ub.transpose().tail(10) << std::endl << std::endl;
+    }
 
     // Set up LBFGS++ parameters
     LBFGSBParam<doublereal> param;
@@ -99,22 +78,20 @@ int main()
 
     // Solver
     LBFGSBSolver<doublereal> solver(param);
-    integer niter = solver.minimize(fun, x, fx, lb, ub);
+    niter = solver.minimize(fun, x, fx, lb, ub);
 
     doublereal calls[4], time[2];
     CUTEST_ureport(&status, calls, time);
 
-    std::cout << "x = " << x.transpose().head(5) << " ... " << x.transpose().tail(5) << std::endl << std::endl;
+    if(verbose)
+        std::cout << "x = " << x.transpose().head(5) << " ... " << x.transpose().tail(5) << std::endl << std::endl;
 
-    std::cout << "# variables           = " << CUTEst_nvar << std::endl;
-    std::cout << "# iterations          = " << niter << std::endl;
-    std::cout << "# function calls      = " << calls[0] << std::endl;
-    std::cout << "Final f               = " << fx << std::endl;
-    std::cout << "Final ||proj_grad||   = " << solver.final_grad_norm() << std::endl;
-    std::cout << "Setup time            = " << time[0] << " s" << std::endl;
-    std::cout << "Solve time            = " << time[1] << " s" << std::endl;
+    nvar = CUTEst_nvar;
+    nfun = calls[0];
+    objval = fx;
+    proj_grad = solver.final_grad_norm();
+    setup_time = time[0];
+    solve_time = time[1];
 
     CUTEST_uterminate(&status);
-
-    return 0;
 }
