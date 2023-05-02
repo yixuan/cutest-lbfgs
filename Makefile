@@ -13,14 +13,14 @@ INTERFACE_OBJ = lbfgsb_interface.o lbfgspp_interface.o interface.o
 
 # https://stackoverflow.com/a/10172729
 # https://stackoverflow.com/a/58541640
-BOXCONSTR = 3PK ALLINIT ANTWERP
+BOXCONSTR = 3PK ALLINIT ANTWERP BDEXP BIGGSB1 BQP1VAR BQPGABIM BQPGASIM BQPGAUSS CAMEL6 CHARDIS1 CHEBYQAD
 BOXCONSTR_PATH = $(addprefix problems/boxconstr/,$(BOXCONSTR))
 BOXCONSTR_TARGET = $(addsuffix /run.out,$(BOXCONSTR_PATH))
 BOXCONSTR_OBJ = $(addsuffix /ELFUN.o,$(BOXCONSTR_PATH)) \
 	$(addsuffix /GROUP.o,$(BOXCONSTR_PATH)) \
 	$(addsuffix /RANGE.o,$(BOXCONSTR_PATH))
 
-.PHONY: all headers echo clean
+.PHONY: all headers echo run clean
 
 all: headers $(SOLVER_OBJ) $(INTERFACE_OBJ) $(BOXCONSTR_TARGET)
 headers: include/Eigen include/LBFGSpp
@@ -80,6 +80,17 @@ echo:
 	@echo $(BOXCONSTR_TARGET)
 	@echo $(BOXCONSTR_OBJ)
 
+run: $(BOXCONSTR_TARGET)
+	@for path in $(BOXCONSTR_PATH); do \
+		cd $$path && \
+		pwd && \
+		(./run.out || exit 0) && \
+		echo && \
+		cd ../../..; \
+	done
+
 clean:
-	-rm $(SOLVER_OBJ) $(INTERFACE_OBJ) $(BOXCONSTR_OBJ)
+	-rm $(SOLVER_OBJ) $(INTERFACE_OBJ)
+	-rm $(BOXCONSTR_OBJ)
+	-rm $(BOXCONSTR_TARGET)
 
