@@ -9,7 +9,8 @@ LDFLAGS = -L$(CUTEST)/objects/$(MYARCH)/double -lcutest -lgfortran
 LBFGS_OBJ = lbfgs.o
 LBFGSB_OBJ = blas.o lbfgsb.o linpack.o timer.o
 SOLVER_OBJ = $(LBFGS_OBJ) $(LBFGSB_OBJ)
-INTERFACE_OBJ = lbfgsb_interface.o lbfgspp_interface.o interface.o
+INTERFACE_OBJ = boxconstr_lbfgsb_interface.o boxconstr_lbfgspp_interface.o interface.o
+RUN_OBJ = run_boxconstr.o
 
 # https://stackoverflow.com/a/10172729
 # https://stackoverflow.com/a/58541640
@@ -22,7 +23,7 @@ BOXCONSTR_OBJ = $(addsuffix /ELFUN.o,$(BOXCONSTR_PATH)) \
 
 .PHONY: all headers echo run clean
 
-all: headers $(SOLVER_OBJ) $(INTERFACE_OBJ) $(BOXCONSTR_TARGET)
+all: headers $(SOLVER_OBJ) $(INTERFACE_OBJ) $(RUN_OBJ) $(BOXCONSTR_TARGET)
 headers: include/Eigen include/LBFGSpp
 
 ####### Download Eigen and LBFGS++ #######
@@ -60,19 +61,23 @@ timer.o: solvers/lbfgsb/timer.f
 	$(FC) $(FCFLAGS) -c $< -o $@
 
 # Compile interface files
-lbfgsb_interface.o: lbfgsb_interface.cpp interface.h
+boxconstr_lbfgsb_interface.o: boxconstr_lbfgsb_interface.cpp interface.h
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
-lbfgspp_interface.o: lbfgspp_interface.cpp interface.h
+boxconstr_lbfgspp_interface.o: boxconstr_lbfgspp_interface.cpp interface.h
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 interface.o: interface.cpp interface.h
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
+# Runners
+run_boxconstr.o: run_boxconstr.cpp interface.h
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+
 # Targets for box-constrained problems
-$(BOXCONSTR_TARGET): %/run.out: %/ELFUN.f %/GROUP.f %/RANGE.f $(LBFGSB_OBJ) $(INTERFACE_OBJ)
+$(BOXCONSTR_TARGET): %/run.out: %/ELFUN.f %/GROUP.f %/RANGE.f $(LBFGSB_OBJ) $(INTERFACE_OBJ) run_boxconstr.o
 	$(FC) $(FCFLAGS) -c $*/ELFUN.f -o $*/ELFUN.o
 	$(FC) $(FCFLAGS) -c $*/GROUP.f -o $*/GROUP.o
 	$(FC) $(FCFLAGS) -c $*/RANGE.f -o $*/RANGE.o
-	$(CXX) $(CXXFLAGS) $*/ELFUN.o $*/GROUP.o $*/RANGE.o $(LBFGSB_OBJ) $(INTERFACE_OBJ) $(LDFLAGS) -o $@
+	$(CXX) $(CXXFLAGS) $*/ELFUN.o $*/GROUP.o $*/RANGE.o $(LBFGSB_OBJ) $(INTERFACE_OBJ) run_boxconstr.o $(LDFLAGS) -o $@
 
 # For debugging purposes
 echo:
@@ -91,7 +96,7 @@ run: $(BOXCONSTR_TARGET)
 	done
 
 clean:
-	-rm $(SOLVER_OBJ) $(INTERFACE_OBJ)
+	-rm $(SOLVER_OBJ) $(INTERFACE_OBJ) $(RUN_OBJ)
 	-rm $(BOXCONSTR_OBJ)
 	-rm $(BOXCONSTR_TARGET)
 

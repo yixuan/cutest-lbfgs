@@ -1,11 +1,24 @@
+#ifndef CUTEST_INTERFACE_H
+#define CUTEST_INTERFACE_H
+
 #include <iostream>
 #include <stdexcept>
 #include <Eigen/Core>
+#include "json.hpp"
 
 extern "C" {
 
 // CUTEst types and functions
 #include <cutest.h>
+
+// Fortran L-BFGS function
+void lbfgs_(
+    const int* n, const int* m,
+    double* x, const double* f, const double* g,
+    const int* diagco, const double* diag,
+    const int* iprint, const double* eps, const double* xtol,
+    double* w, int* iflag
+);
 
 // Fortran L-BFGS-B function
 void setulb_(
@@ -48,5 +61,16 @@ struct CUTEstStat
 };
 
 // Interface
-void lbfgsb_stat(CUTEstStat& stat, bool verbose = false);
-void lbfgspp_stat(CUTEstStat& stat, bool verbose = false);
+void unconstr_lbfgs_stat(CUTEstStat& stat, bool verbose = false);
+void unconstr_lbfgspp_stat(CUTEstStat& stat, bool verbose = false);
+void boxconstr_lbfgsb_stat(CUTEstStat& stat, bool verbose = false);
+void boxconstr_lbfgspp_stat(CUTEstStat& stat, bool verbose = false);
+
+// Helper functions
+void print_stat(const CUTEstStat& stat);
+
+// Convert CUTEstStat object to JSON
+nlohmann::json stat_to_json(const CUTEstStat& stat);
+
+
+#endif  // CUTEST_INTERFACE_H

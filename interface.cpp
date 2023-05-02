@@ -27,7 +27,7 @@ inline std::string trim_space(const std::string& name)
     return name.substr(0, trim + 1);
 }
 
-inline void print_stat(const CUTEstStat& stat)
+void print_stat(const CUTEstStat& stat)
 {
     std::cout << "Problem               = " << stat.prob << std::endl;
     std::cout << "Flag                  = " << stat.flag << std::endl;
@@ -41,7 +41,7 @@ inline void print_stat(const CUTEstStat& stat)
 }
 
 // Convert CUTEstStat object to JSON
-inline json stat_to_json(const CUTEstStat& stat)
+json stat_to_json(const CUTEstStat& stat)
 {
     json data = {
         {"problem", trim_space(stat.prob)},
@@ -56,33 +56,4 @@ inline json stat_to_json(const CUTEstStat& stat)
         {"solve_time", stat.solve_time}
     };
     return data;
-}
-
-int main()
-{
-    using json = nlohmann::json;
-
-    CUTEstStat stat1, stat2;
-
-    lbfgsb_stat(stat1, false);
-    json lbfgsb = stat_to_json(stat1);
-    lbfgsb["solver"] = "Fortran L-BFGS-B";
-
-    // std::cout << "#####################################################" << std::endl;
-    // std::cout << "Solver                = L-BFGS-B" << std::endl;
-    // print_stat(stat1);
-
-    lbfgspp_stat(stat2, false);
-    json lbfgspp = stat_to_json(stat2);
-    lbfgspp["solver"] = "LBFGS++ L-BFGS-B";
-
-    // std::cout << "#####################################################" << std::endl;
-    // std::cout << "Solver                = LBFGS++" << std::endl;
-    // print_stat(stat2);
-    // std::cout << "#####################################################" << std::endl;
-
-    std::cout << lbfgsb.dump(2) << std::endl;
-    std::cout << lbfgspp.dump(2) << std::endl;
-
-    return 0;
 }

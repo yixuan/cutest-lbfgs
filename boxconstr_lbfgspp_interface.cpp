@@ -84,11 +84,11 @@ void boxconstr_lbfgspp_stat(CUTEstStat& stat, bool verbose)
     LBFGSBParam<doublereal> param;
     param.m = 6;
     param.max_iterations = 10000;
-    // param.delta = 0.0;
-    param.delta = 1e7 * std::numeric_limits<doublereal>::epsilon();
     param.epsilon = 1e-5;
     param.epsilon_rel = 0.0;
     param.past = 1;
+    // param.delta = 0.0;
+    param.delta = 1e7 * std::numeric_limits<doublereal>::epsilon();
     param.max_submin = 0;
     param.max_linesearch = 100;
 
