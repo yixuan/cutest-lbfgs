@@ -143,6 +143,8 @@ void lbfgsb_stat(CUTEstStat& stat, bool verbose)
             i = isave[29];
         } else {
             // Errors
+            stat.prob = std::string(prob_name);
+            stat.nvar = CUTEst_nvar;
             stat.flag = 1;
             stat.msg = std::string("Solver abnormal exit. itask = ") +
                 std::to_string(itask);

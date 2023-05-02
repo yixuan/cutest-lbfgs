@@ -98,7 +98,17 @@ void lbfgspp_stat(CUTEstStat& stat, bool verbose)
 
     // Solver
     LBFGSBSolver<doublereal> solver(param);
-    int niter = solver.minimize(fun, x, fx, lb, ub);
+    int niter;
+    try {
+        niter = solver.minimize(fun, x, fx, lb, ub);
+    } catch (std::exception& e) {
+        stat.prob = std::string(prob_name);
+        stat.nvar = CUTEst_nvar;
+        stat.flag = 1;
+        stat.msg = e.what();
+        CUTEST_uterminate(&status);
+        return;
+    }
 
     doublereal calls[4], time[2];
     CUTEST_ureport(&status, calls, time);
