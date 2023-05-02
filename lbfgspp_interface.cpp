@@ -25,11 +25,19 @@ void lbfgspp_stat(CUTEstStat& stat, bool verbose)
     integer status;
     // Number of variables
     integer CUTEst_nvar;
-    CUTEST_udimen(&status, &funit, &CUTEst_nvar);
+    // Number of general constraints
+    integer CUTEst_nconstr;
+    CUTEST_cdimen(&status, &funit, &CUTEst_nvar, &CUTEst_nconstr);
     if(status)
     {
         stat.flag = 2;
         stat.msg = "Error getting problem dimension.";
+        return;
+    }
+    if(CUTEst_nconstr > 0)
+    {
+        stat.flag = 2;
+        stat.msg = "Problem contains general constrints.";
         return;
     }
     if(verbose)
