@@ -32,15 +32,20 @@ public:
     doublereal operator()(const Vector& x, Vector& grad);
 };
 
-// Interface
-void lbfgsb_stat(
-    std::string& prob, int& nvar, int& niter, int& nfun,
-    double& objval, double& proj_grad,
-    double& setup_time, double& solve_time,
-    bool verbose = false);
+// Statistics
+struct CUTEstStat
+{
+    std::string prob;        // Problem name
+    int         flag;        // 0-normal, 1-problem error, 2-solver error
+    int         nvar;        // Number of variables
+    int         niter;       // Number of iterations
+    int         nfun;        // Number of function evluations
+    double      objval;      // Final objective function value
+    double      proj_grad;   // Final (projected) gradient
+    double      setup_time;  // Time for setup
+    double      solve_time;  // Time for solving
+};
 
-void lbfgspp_stat(
-    std::string& prob, int& nvar, int& niter, int& nfun,
-    double& objval, double& proj_grad,
-    double& setup_time, double& solve_time,
-    bool verbose = false);
+// Interface
+void lbfgsb_stat(CUTEstStat& stat, bool verbose = false);
+void lbfgspp_stat(CUTEstStat& stat, bool verbose = false);

@@ -2,11 +2,7 @@
 #include <LBFGSB.h>
 using namespace LBFGSpp;
 
-void lbfgspp_stat(
-    std::string& prob, int& nvar, int& niter, int& nfun,
-    double& objval, double& proj_grad,
-    double& setup_time, double& solve_time,
-    bool verbose)
+void lbfgspp_stat(CUTEstStat& stat, bool verbose)
 {
     using Vector = Eigen::Matrix<doublereal, Eigen::Dynamic, 1>;
 
@@ -88,7 +84,7 @@ void lbfgspp_stat(
 
     // Solver
     LBFGSBSolver<doublereal> solver(param);
-    niter = solver.minimize(fun, x, fx, lb, ub);
+    int niter = solver.minimize(fun, x, fx, lb, ub);
 
     doublereal calls[4], time[2];
     CUTEST_ureport(&status, calls, time);
@@ -96,13 +92,14 @@ void lbfgspp_stat(
     if(verbose)
         std::cout << "x = " << x.transpose().head(5) << " ... " << x.transpose().tail(5) << std::endl << std::endl;
 
-    prob = std::string(prob_name);
-    nvar = CUTEst_nvar;
-    nfun = calls[0];
-    objval = fx;
-    proj_grad = solver.final_grad_norm();
-    setup_time = time[0];
-    solve_time = time[1];
+    stat.prob = std::string(prob_name);
+    stat.nvar = CUTEst_nvar;
+    stat.niter = niter;
+    stat.nfun = calls[0];
+    stat.objval = fx;
+    stat.proj_grad = solver.final_grad_norm();
+    stat.setup_time = time[0];
+    stat.solve_time = time[1];
 
     CUTEST_uterminate(&status);
 }

@@ -1,6 +1,8 @@
 #include "interface.h"
 #include "json.hpp"
 
+using json = nlohmann::json;
+
 // Constructor
 CUTEstProblem::CUTEstProblem(integer n_) : n(n_) {}
 
@@ -25,61 +27,56 @@ inline std::string trim_space(const std::string& name)
     return name.substr(0, trim + 1);
 }
 
+inline void print_stat(const CUTEstStat& stat)
+{
+    std::cout << "Problem               = " << stat.prob << std::endl;
+    std::cout << "Flag                  = " << stat.flag << std::endl;
+    std::cout << "# variables           = " << stat.nvar << std::endl;
+    std::cout << "# iterations          = " << stat.niter << std::endl;
+    std::cout << "# function calls      = " << stat.nfun << std::endl;
+    std::cout << "Final f               = " << stat.objval << std::endl;
+    std::cout << "Final ||proj_grad||   = " << stat.proj_grad << std::endl;
+    std::cout << "Setup time            = " << stat.setup_time << " s" << std::endl;
+    std::cout << "Solve time            = " << stat.solve_time << " s" << std::endl;
+}
+
+// Convert CUTEstStat object to JSON
+inline json stat_to_json(const CUTEstStat& stat)
+{
+    json data = {
+        {"problem", trim_space(stat.prob)},
+        {"flag", stat.flag},
+        {"nvar", stat.nvar},
+        {"niter", stat.niter},
+        {"nfun", stat.nfun},
+        {"objval", stat.objval},
+        {"proj_grad", stat.proj_grad},
+        {"setup_time", stat.setup_time},
+        {"solve_time", stat.solve_time}
+    };
+    return data;
+}
+
 int main()
 {
     using json = nlohmann::json;
-    std::string prob;
-    int nvar, niter, nfun;
-    double objval, proj_grad, setup_time, solve_time;
 
-    lbfgsb_stat(prob, nvar, niter, nfun, objval, proj_grad, setup_time, solve_time, false);
-    json lbfgsb = {
-        {"problem", trim_space(prob)},
-        {"nvar", nvar},
-        {"niter", niter},
-        {"nfun", nfun},
-        {"objval", objval},
-        {"proj_grad", proj_grad},
-        {"setup_time", setup_time},
-        {"solve_time", solve_time}
-    };
+    CUTEstStat stat;
 
-    /*
+    lbfgsb_stat(stat, false);
+    json lbfgsb = stat_to_json(stat);
+
     std::cout << "#####################################################" << std::endl;
-    std::cout << "Solve                 = L-BFGS-B" << std::endl;
-    std::cout << "# variables           = " << nvar << std::endl;
-    std::cout << "# iterations          = " << niter << std::endl;
-    std::cout << "# function calls      = " << nfun << std::endl;
-    std::cout << "Final f               = " << objval << std::endl;
-    std::cout << "Final ||proj_grad||   = " << proj_grad << std::endl;
-    std::cout << "Setup time            = " << setup_time << " s" << std::endl;
-    std::cout << "Solve time            = " << solve_time << " s" << std::endl;
-    */
+    std::cout << "Solver                = L-BFGS-B" << std::endl;
+    print_stat(stat);
 
-    lbfgspp_stat(prob, nvar, niter, nfun, objval, proj_grad, setup_time, solve_time, false);
-    json lbfgspp = {
-        {"problem", trim_space(prob)},
-        {"nvar", nvar},
-        {"niter", niter},
-        {"nfun", nfun},
-        {"objval", objval},
-        {"proj_grad", proj_grad},
-        {"setup_time", setup_time},
-        {"solve_time", solve_time}
-    };
+    lbfgspp_stat(stat, false);
+    json lbfgspp = stat_to_json(stat);
 
-    /*
     std::cout << "#####################################################" << std::endl;
-    std::cout << "Solve                 = LBFGS++" << std::endl;
-    std::cout << "# variables           = " << nvar << std::endl;
-    std::cout << "# iterations          = " << niter << std::endl;
-    std::cout << "# function calls      = " << nfun << std::endl;
-    std::cout << "Final f               = " << objval << std::endl;
-    std::cout << "Final ||proj_grad||   = " << proj_grad << std::endl;
-    std::cout << "Setup time            = " << setup_time << " s" << std::endl;
-    std::cout << "Solve time            = " << solve_time << " s" << std::endl;
+    std::cout << "Solver                = LBFGS++" << std::endl;
+    print_stat(stat);
     std::cout << "#####################################################" << std::endl;
-    */
 
     json stats = {
         {"L-BFGS-B", lbfgsb},
