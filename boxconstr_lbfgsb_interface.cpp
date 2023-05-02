@@ -1,6 +1,6 @@
 #include "interface.h"
 
-void lbfgsb_stat(CUTEstStat& stat, bool verbose)
+void boxconstr_lbfgsb_stat(CUTEstStat& stat, bool verbose)
 {
     using Vector = Eigen::Matrix<doublereal, Eigen::Dynamic, 1>;
     using IntVector = Eigen::VectorXi;

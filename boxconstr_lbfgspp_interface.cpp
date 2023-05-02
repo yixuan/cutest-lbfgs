@@ -2,7 +2,7 @@
 #include <LBFGSB.h>
 using namespace LBFGSpp;
 
-void lbfgspp_stat(CUTEstStat& stat, bool verbose)
+void boxconstr_lbfgspp_stat(CUTEstStat& stat, bool verbose)
 {
     using Vector = Eigen::Matrix<doublereal, Eigen::Dynamic, 1>;
 
