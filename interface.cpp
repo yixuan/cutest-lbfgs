@@ -18,14 +18,23 @@ doublereal CUTEstProblem::operator()(const Vector& x, Vector& grad)
     return fx;
 }
 
+// Trim trailing whitespace
+inline std::string trim_space(const std::string& name)
+{
+    std::size_t trim = name.find_last_not_of(' ');
+    return name.substr(0, trim + 1);
+}
+
 int main()
 {
     using json = nlohmann::json;
+    std::string prob;
     int nvar, niter, nfun;
     double objval, proj_grad, setup_time, solve_time;
 
-    lbfgsb_stat(nvar, niter, nfun, objval, proj_grad, setup_time, solve_time, false);
+    lbfgsb_stat(prob, nvar, niter, nfun, objval, proj_grad, setup_time, solve_time, false);
     json lbfgsb = {
+        {"problem", trim_space(prob)},
         {"nvar", nvar},
         {"niter", niter},
         {"nfun", nfun},
@@ -47,8 +56,9 @@ int main()
     std::cout << "Solve time            = " << solve_time << " s" << std::endl;
     */
 
-    lbfgspp_stat(nvar, niter, nfun, objval, proj_grad, setup_time, solve_time, false);
+    lbfgspp_stat(prob, nvar, niter, nfun, objval, proj_grad, setup_time, solve_time, false);
     json lbfgspp = {
+        {"problem", trim_space(prob)},
         {"nvar", nvar},
         {"niter", niter},
         {"nfun", nfun},

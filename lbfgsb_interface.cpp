@@ -1,7 +1,7 @@
 #include "interface.h"
 
 void lbfgsb_stat(
-    int& nvar, int& niter, int& nfun,
+    std::string& prob, int& nvar, int& niter, int& nfun,
     double& objval, double& proj_grad,
     double& setup_time, double& solve_time,
     bool verbose
@@ -58,6 +58,16 @@ void lbfgsb_stat(
         std::cout << "x0 = " <<  x.transpose().head(10) << " ... " <<  x.transpose().tail(10) << std::endl;
         std::cout << "lb = " << lb.transpose().head(10) << " ... " << lb.transpose().tail(10) << std::endl;
         std::cout << "ub = " << ub.transpose().head(10) << " ... " << ub.transpose().tail(10) << std::endl << std::endl;
+    }
+
+    // Problem name
+    char prob_name[16];
+    std::fill(prob_name, prob_name + 16, 0);
+    CUTEST_probname(&status, prob_name);
+    if(status)
+    {
+        std::cout << "** CUTEst error, status = " << status << ", aborting\n";
+        return;
     }
 
     // Algorithm parameters
@@ -135,6 +145,7 @@ void lbfgsb_stat(
     if(verbose)
         std::cout << "x = " << x.transpose().head(5) << " ... " << x.transpose().tail(5) << std::endl << std::endl;
 
+    prob = std::string(prob_name);
     nvar = CUTEst_nvar;
     niter = i;
     nfun = calls[0];

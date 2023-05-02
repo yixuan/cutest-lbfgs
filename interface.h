@@ -34,13 +34,13 @@ public:
 
 // Interface
 void lbfgsb_stat(
-    int& nvar, int& niter, int& nfun,
+    std::string& prob, int& nvar, int& niter, int& nfun,
     double& objval, double& proj_grad,
     double& setup_time, double& solve_time,
     bool verbose = false);
 
 void lbfgspp_stat(
-    int& nvar, int& niter, int& nfun,
+    std::string& prob, int& nvar, int& niter, int& nfun,
     double& objval, double& proj_grad,
     double& setup_time, double& solve_time,
     bool verbose = false);
