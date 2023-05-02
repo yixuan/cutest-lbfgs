@@ -58,6 +58,7 @@ void lbfgspp_stat(CUTEstStat& stat, bool verbose)
     {
         stat.flag = 2;
         stat.msg = "Error setting up problem.";
+        CUTEST_uterminate(&status);
         return;
     }
     if(verbose)
@@ -75,6 +76,7 @@ void lbfgspp_stat(CUTEstStat& stat, bool verbose)
     {
         stat.flag = 2;
         stat.msg = "Error getting problem name.";
+        CUTEST_uterminate(&status);
         return;
     }
 

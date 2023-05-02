@@ -57,6 +57,7 @@ void lbfgsb_stat(CUTEstStat& stat, bool verbose)
     {
         stat.flag = 2;
         stat.msg = "Error setting up problem.";
+        CUTEST_uterminate(&status);
         return;
     }
     if(verbose)
@@ -74,6 +75,7 @@ void lbfgsb_stat(CUTEstStat& stat, bool verbose)
     {
         stat.flag = 2;
         stat.msg = "Error getting problem name.";
+        CUTEST_uterminate(&status);
         return;
     }
 
@@ -144,6 +146,7 @@ void lbfgsb_stat(CUTEstStat& stat, bool verbose)
             stat.flag = 1;
             stat.msg = std::string("Solver abnormal exit. itask = ") +
                 std::to_string(itask);
+            CUTEST_uterminate(&status);
             return;
         }
     }
