@@ -1,9 +1,9 @@
 FC = gfortran
-FCFLAGS = -O2
+FCFLAGS = -O2 -mtune=native
 
 CXX = g++
 CPPFLAGS = -DNDEBUG -I$(CUTEST)/include -I./include
-CXXFLAGS = -std=c++11 -O2
+CXXFLAGS = -std=c++11 -O2 -mtune=native
 LDFLAGS = -L$(CUTEST)/objects/$(MYARCH)/double -lcutest -lgfortran
 
 LBFGS_OBJ = lbfgs.o
@@ -13,7 +13,7 @@ INTERFACE_OBJ = lbfgsb_interface.o lbfgspp_interface.o interface.o
 
 # https://stackoverflow.com/a/10172729
 # https://stackoverflow.com/a/58541640
-BOXCONSTR = 3PK ALLINIT ANTWERP BDEXP BIGGSB1 BQP1VAR BQPGABIM BQPGASIM BQPGAUSS CAMEL6 CHARDIS1 CHEBYQAD
+BOXCONSTR = $(shell ls problems/boxconstr)
 BOXCONSTR_PATH = $(addprefix problems/boxconstr/,$(BOXCONSTR))
 BOXCONSTR_TARGET = $(addsuffix /run.out,$(BOXCONSTR_PATH))
 BOXCONSTR_OBJ = $(addsuffix /ELFUN.o,$(BOXCONSTR_PATH)) \
@@ -76,6 +76,7 @@ $(BOXCONSTR_TARGET): %/run.out: %/ELFUN.f %/GROUP.f %/RANGE.f $(LBFGSB_OBJ) $(IN
 
 # For debugging purposes
 echo:
+	@echo $(BOXCONSTR)
 	@echo $(BOXCONSTR_PATH)
 	@echo $(BOXCONSTR_TARGET)
 	@echo $(BOXCONSTR_OBJ)
@@ -83,7 +84,7 @@ echo:
 run: $(BOXCONSTR_TARGET)
 	@for path in $(BOXCONSTR_PATH); do \
 		cd $$path && \
-		pwd && \
+		# pwd && \
 		(./run.out || exit 0) && \
 		echo && \
 		cd ../../..; \
