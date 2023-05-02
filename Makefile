@@ -113,7 +113,16 @@ echo:
 	@echo $(BOXCONSTR_OBJ)
 
 run: $(BOXCONSTR_TARGET)
+	# Run box-constrained problems
 	@for path in $(BOXCONSTR_PATH); do \
+		cd $$path && \
+		# pwd && \
+		(./run.out || exit 0) && \
+		echo && \
+		cd ../../..; \
+	done
+	# Run unconstrained problems
+	@for path in $(UNCONSTR_PATH); do \
 		cd $$path && \
 		# pwd && \
 		(./run.out || exit 0) && \
