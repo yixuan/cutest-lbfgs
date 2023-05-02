@@ -36,7 +36,8 @@ public:
 struct CUTEstStat
 {
     std::string prob;        // Problem name
-    int         flag;        // 0-normal, 1-problem error, 2-solver error
+    int         flag;        // 0-normal, 1-solver error, 2-problem error
+    std::string msg;         // Error message
     int         nvar;        // Number of variables
     int         niter;       // Number of iterations
     int         nfun;        // Number of function evluations

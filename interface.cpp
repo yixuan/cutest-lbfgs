@@ -46,6 +46,7 @@ inline json stat_to_json(const CUTEstStat& stat)
     json data = {
         {"problem", trim_space(stat.prob)},
         {"flag", stat.flag},
+        {"msg", stat.msg},
         {"nvar", stat.nvar},
         {"niter", stat.niter},
         {"nfun", stat.nfun},
@@ -66,17 +67,17 @@ int main()
     lbfgsb_stat(stat, false);
     json lbfgsb = stat_to_json(stat);
 
-    std::cout << "#####################################################" << std::endl;
-    std::cout << "Solver                = L-BFGS-B" << std::endl;
-    print_stat(stat);
+    // std::cout << "#####################################################" << std::endl;
+    // std::cout << "Solver                = L-BFGS-B" << std::endl;
+    // print_stat(stat);
 
     lbfgspp_stat(stat, false);
     json lbfgspp = stat_to_json(stat);
 
-    std::cout << "#####################################################" << std::endl;
-    std::cout << "Solver                = LBFGS++" << std::endl;
-    print_stat(stat);
-    std::cout << "#####################################################" << std::endl;
+    // std::cout << "#####################################################" << std::endl;
+    // std::cout << "Solver                = LBFGS++" << std::endl;
+    // print_stat(stat);
+    // std::cout << "#####################################################" << std::endl;
 
     json stats = {
         {"L-BFGS-B", lbfgsb},

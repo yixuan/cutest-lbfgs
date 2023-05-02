@@ -15,7 +15,8 @@ void lbfgspp_stat(CUTEstStat& stat, bool verbose)
     FORTRAN_open(&funit, fname, &ierr);
     if(ierr)
     {
-        std::cout << "Error opening file OUTSDIF.d.\nAborting.\n";
+        stat.flag = 2;
+        stat.msg = "Error opening file OUTSDIF.d.";
         return;
     }
 
@@ -27,7 +28,8 @@ void lbfgspp_stat(CUTEstStat& stat, bool verbose)
     CUTEST_udimen(&status, &funit, &CUTEst_nvar);
     if(status)
     {
-        std::cout << "** CUTEst error, status = " << status << ", aborting\n";
+        stat.flag = 2;
+        stat.msg = "Error getting problem dimension.";
         return;
     }
     if(verbose)
@@ -46,7 +48,8 @@ void lbfgspp_stat(CUTEstStat& stat, bool verbose)
                   &CUTEst_nvar, x.data(), lb.data(), ub.data());
     if(status)
     {
-        std::cout << "** CUTEst error, status = " << status << ", aborting\n";
+        stat.flag = 2;
+        stat.msg = "Error setting up problem.";
         return;
     }
     if(verbose)
@@ -62,7 +65,8 @@ void lbfgspp_stat(CUTEstStat& stat, bool verbose)
     CUTEST_probname(&status, prob_name);
     if(status)
     {
-        std::cout << "** CUTEst error, status = " << status << ", aborting\n";
+        stat.flag = 2;
+        stat.msg = "Error getting problem name.";
         return;
     }
 
