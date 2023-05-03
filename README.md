@@ -1,0 +1,295 @@
+## Benchmarking L-BFGS/L-BFGS-B solvers
+
+L-BFGS and L-BFGS-B are important optimization algorithms and have
+different software implementations. For example, the classical
+[Fortran code](https://users.iems.northwestern.edu/~nocedal/lbfgsb.html)
+for L-BFGS-B is one of the most stable and mature software package for this
+algorithm, and is the backend for the widely-used `optim(method = "L-BFGS-B")`
+function in R and `scipy.optimize.minimize(method = "L-BFGS-B")` in Python.
+
+To develop new implementations of L-BFGS/L-BFGS-B, for example my
+[LBFGS++](https://lbfgspp.statr.me/) library, it would be helpful to see how
+they compare to the classical Fortran code. And to do this, we need to first
+find a collection of testing problems. Fortunately, we have a good choice.
+
+[CUTEst](https://github.com/ralna/CUTEst) is a collection of optimization
+problems commonly used to test optimization algorithms and software
+packages. It contains both small (a few variables) and large (>50k variables)
+problems, and some of them come from real applications. However, installing
+CUTEst and linking optimization solvers to it is not a trivial task.
+To this end, this repository has three purposes:
+
+1. Documenting how to install CUTEst and related packages.
+2. Retrieving a set of problems from CUTEst for the L-BFGS and L-BFGS-B algorithms.
+3. Benchmarking both the reference and LBFGS++ solvers on the retrieved problems.
+
+The third point has been mentioned in several issues
+(e.g., [#23](https://github.com/yixuan/LBFGSpp/issues/23),
+[#29](https://github.com/yixuan/LBFGSpp/issues/29)) of LBFGS++, and to me it
+is also an important guide on the future development of LBFGS++.
+
+## Installing CUTEst
+
+Below use the repository folder to store all the components of CUTEst,
+for example, `/home/qyx/cutest` on my machine. This can be done by
+cloning this repository into a local folder:
+
+```bash
+git clone --depth=1 https://github.com/yixuan/cutest-lbfgs.git /home/qyx/cutest
+```
+
+For convenience,
+also set an environment variable to save this path. Change the
+value on your machine as needed.
+
+```bash
+export CUTEST_HOME=/home/qyx/cutest
+```
+
+Then enter the CUTEst root folder and download its components.
+
+```bash
+cd $CUTEST_HOME
+git clone --depth=1 https://github.com/ralna/ARCHDefs ./archdefs
+git clone --depth=1 https://github.com/ralna/SIFDecode ./sifdecode
+git clone --depth=1 https://github.com/ralna/CUTEst ./cutest
+```
+
+We also add the three paths above to environment variables:
+
+```bash
+export ARCHDEFS=$CUTEST_HOME/archdefs
+export SIFDECODE=$CUTEST_HOME/sifdecode
+export CUTEST=$CUTEST_HOME/cutest
+```
+
+Then install the packages:
+
+```bash
+cd $CUTEST
+$ARCHDEFS/install_optrove
+```
+
+The installation program will ask you a few questions regarding your
+OS and software environment. See my
+[installation log](logs/installation.log) for an example.
+
+At the end of the process, the message tells you to set the `MYARCH`
+environment variable according to your choice during the installation,
+for example,
+
+```bash
+export MYARCH="pc.lnx.gfo"
+```
+
+## Selecting the problems
+
+This section is useful if you want to retrieve the CUTEst problems
+by yourself. I have already packed a set of problems suitable for
+L-BFGS and L-BFGS-B algorithms in this
+[compressed file](#).
+You can skip the rest of this section if you only want to work with
+these problems:
+
+```bash
+wget
+tar -xf cutest-problems.tar.xz
+```
+
+Each CUTEst problem is expressed in an SIF (Standard Input Format) file.
+The collection of SIF files currently available in CUTEst is given in
+[this repository](https://bitbucket.org/optrove/sif/src/master/).
+To download these SIF files:
+
+```bash
+cd $CUTEST_HOME
+git clone --depth=1 https://bitbucket.org/optrove/sif ./sif
+```
+
+However, not all problems are suitable for L-BFGS and L-BFGS-B, so we
+shall take subsets of the problems according to their categories.
+[This page](https://www.cuter.rl.ac.uk/Problems/mastsif.shtml)
+lists problems that have an associated category, and the
+[classification scheme](https://www.cuter.rl.ac.uk/Problems/classification.shtml)
+introduces the meaning of the category code.
+
+We essentially want unconstrained and box-constrained optimization problems
+with a smooth objective function and no other type of constraints. This can
+be achieved using the following R code:
+
+
+```r
+library(rvest)
+library(dplyr)
+url = "https://www.cuter.rl.ac.uk/Problems/mastsif.shtml"
+page = read_html(url)
+tab = html_table(page)[[1]]
+colnames(tab) = c("problem", "files", "code")
+
+# Unconstrained problems
+unconstr = tab %>% select(problem, code) %>%
+    mutate(code = gsub(" ", "", code)) %>%
+    filter(grepl("^[QSO]UR2-.+-[V0]$", code))
+unconstr
+```
+
+```
+## # A tibble: 287 × 2
+##    problem   code
+##    <chr>     <chr>
+##  1 AKIVA     OUR2-AN-2-0
+##  2 ALLINITU  OUR2-AY-4-0
+##  3 ARGLBLE   SUR2-AN-V-V
+##  4 ARGLCLE   SUR2-AN-V-V
+##  5 ARGLINA   SUR2-AN-V-0
+##  6 ARGLINB   SUR2-AN-V-0
+##  7 ARGLINC   SUR2-AN-V-0
+##  8 ARGTRIGLS SUR2-AN-V-0
+##  9 ARWHEAD   OUR2-AN-V-0
+## 10 BA-L1LS   SUR2-MN-57-0
+## # ℹ 277 more rows
+```
+
+```r
+# Box-constrained problems
+boxconstr = tab %>% select(problem, code) %>%
+    mutate(code = gsub(" ", "", code)) %>%
+    filter(grepl("^[QSO]BR2-.+-[V0]", code))
+boxconstr
+```
+
+```
+## # A tibble: 128 × 2
+##    problem  code
+##    <chr>    <chr>
+##  1 3PK      SBR2-MN-30-0
+##  2 ALLINIT  OBR2-AY-4-0
+##  3 BDEXP    OBR2-AY-V-0
+##  4 BIGGSB1  QBR2-AN-V-V
+##  5 BQP1VAR  QBR2-AN-1-0
+##  6 BQPGABIM QBR2-AN-50-0
+##  7 BQPGASIM QBR2-AN-50-0
+##  8 BQPGAUSS QBR2-AN-2003-0
+##  9 CAMEL6   OBR2-AN-2-0
+## 10 CHARDIS1 OBR2-AY-V-V
+## # ℹ 118 more rows
+```
+
+Each SIF file describes an optimization problem, but it needs a decoding
+process to generate FORTRAN code and data files that can be compiled
+and run. The following R code calls the `SIFDecode` program we have
+just installed to generate decoded problem files.
+
+```r
+# Change this to $CUTEST_HOME as needed
+cutest_home = "/home/qyx/cutest"
+
+# Set environment variables
+Sys.setenv(ARCHDEFS = file.path(cutest_home, "archdefs"))
+Sys.setenv(SIFDECODE = file.path(cutest_home, "sifdecode"))
+Sys.setenv(CUTEST = file.path(cutest_home, "cutest"))
+Sys.setenv(MASTSIF = file.path(cutest_home, "sif"))
+Sys.setenv(MYARCH = "pc.lnx.gfo")
+
+# Create problem folders
+path_problems = file.path(cutest_home, "problems")
+path_unconstr = file.path(path_problems, "unconstr")
+path_boxconstr = file.path(path_problems, "boxconstr")
+if(!dir.exists(path_problems))
+    dir.create(path_problems)
+if(!dir.exists(path_unconstr))
+    dir.create(path_unconstr)
+if(!dir.exists(path_boxconstr))
+    dir.create(path_boxconstr)
+
+# The path to the SIF decoder
+sifdecode = file.path(cutest_home, "sifdecode", "bin", "sifdecoder")
+# Save old working directory
+wd = getwd()
+
+# Decode unconstrained problems
+for(pr in unconstr$problem)
+{
+    print(pr)
+    # Create a subfolder under path_unconstr
+    subfolder = file.path(path_unconstr, pr)
+    if(!dir.exists(subfolder))
+        dir.create(subfolder)
+    # Change working directory to the subfolder
+    setwd(subfolder)
+    # Command string
+    command = paste(sifdecode, "-o 0", pr)
+    # Run command
+    out = system(command, intern = TRUE)
+    # In case error occurs
+    if(!is.null(attr(out, "status")))
+    {
+        setwd(wd)
+        unlink(subfolder, recursive = TRUE)
+    }
+}
+
+# Decode box-constrained problems
+for(pr in boxconstr$problem)
+{
+    print(pr)
+    # Create a subfolder under path_unconstr
+    subfolder = file.path(path_boxconstr, pr)
+    if(!dir.exists(subfolder))
+        dir.create(subfolder)
+    # Change working directory to the subfolder
+    setwd(subfolder)
+    # Command string
+    command = paste(sifdecode, "-o 0", pr)
+    # Run command
+    out = system(command, intern = TRUE)
+    # In case error occurs
+    if(!is.null(attr(out, "status")))
+    {
+        setwd(wd)
+        unlink(subfolder, recursive = TRUE)
+    }
+}
+
+# Restore old working directory
+setwd(wd)
+```
+
+## Benchmarking the solvers
+
+Currently I have finished the CUTEst benchmarking programs for the classical
+Fortran code of both
+[L-BFGS](https://users.iems.northwestern.edu/~nocedal/lbfgs.html) and
+[L-BFGS-B](https://users.iems.northwestern.edu/~nocedal/lbfgsb.html) solvers,
+and also my [LBFGS++](https://lbfgspp.statr.me/) library.
+
+To compile and run the programs:
+
+```bash
+cd $CUTEST_HOME
+make
+make run > logs/run.log
+```
+
+## Summarizing the results
+
+Some preliminary results are given in [this page](#). The important data are:
+
+1. Whether the solver fails on a specific problem (some objective functions are indeed ill-posed or ill-conditioned).
+2. Number of iterations of an algorithm.
+3. Number of function evaluations used.
+4. Which solver achieves smaller objective function values.
+5. Whether the final (projected) gradient is close to zero.
+
+Note that the running time of solvers are **NOT** seriously benchmarked,
+as the times are based on just one run in my machine. My current priority is to
+ensure that LBFGS++ is "correct" and robust in most cases. Once the correctness
+is sufficiently justified, I would focus more on the efficiency in the future.
+
+## License
+
+The benchmarking code in this repository is open source under the MIT license.
+
+The included `json.hpp` file from [nlohmann/json](https://github.com/nlohmann/json)
+is used to export benchmarking results of this project.
+`json.hpp` is licensed under the MIT license.
