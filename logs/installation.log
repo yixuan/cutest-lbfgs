@@ -1,0 +1,537 @@
+Do you require the CUTEst-Matlab interface (y/N)? n
+
+Build schedule:
+ - SIFDecode from
+    /home/qyx/cutest/sifdecode
+ - CUTEst from
+ -  /home/qyx/cutest/cutest
+
+ Select platform
+
+   (1) PC with generic 64-bit processors
+   (2) MAC OS/X with 64-bit processors
+   (3) PC
+   (4) MAC OS/X
+   (5) Cray
+   (6) HP workstation
+   (7) Cross-compiler BinaryBuilder
+3
+ Select operating system
+
+   (1) Linux
+   (2) Windows 2000/XP with MinGW/Msys
+1
+ Would you like to review and modify the system commands (y/N)? n
+ Select fortran compiler
+
+        (1) GNU gfortran compiler
+        (2) Intel ifort compiler
+        (3) Intel ifx compiler
+        (4) LLVM Flang compiler
+        (5) GNU gfortran compiler
+        (6) Intel ifort compiler
+        (7) Intel ifx compiler
+        (8) Lahey lf95 compiler
+        (9) NAG nagfor compiler for PCs under Linux
+        (10) Nvidia nvcc/GNU gfortran cross compiler (N.B. check CUDA arch and code)
+        (11) IBM xlf95 compiler under linux
+1
+ Would you like to review and modify the fortran compiler settings (y/N)? n
+ Select C compiler
+
+        (1) generic CC
+        (2) generic GCC
+        (3) LLVM Clang compiler
+        (4) GNU gcc compiler
+        (5) Intel icc
+        (6) Intel icx compiler
+        (7) XL C/C++
+4
+ Would you like to review and modify the C compiler settings (y/N)? n
+ Version for architecture pc.lnx.gfo will be installed
+
+ Installing SIFDecode ...
+ Would you like to compile SIFDecode ... (Y/n)? y
+
+Installing the double precision version
+ compiling in /home/qyx/cutest/sifdecode/src with the comand
+ /usr/bin/make -s -f /home/qyx/cutest/sifdecode/makefiles/pc.lnx.gfo all
+ Compiling sifdecode      		[ OK ]
+ Compiling sifdecode_main 		[ OK ]
+ sifdecode: tools packages (double precision version) compiled successfully
+ Compiling random         		[ OK ]
+ Compiling check_derivs   		[ OK ]
+ Compiling check_derivs_main		[ OK ]
+ sifdecode: check packages (double precision version) compiled successfully
+ Compiling slct           		[ OK ]
+ Compiling clsf           		[ OK ]
+ select: packages (double precision version) compiled successfully
+
+ SUCCESS: SIFDecode successfully installed
+
+ Installing CUTEst ...
+ Would you like to compile CUTEst ... (Y/n)? y
+
+ CUTEst may be compiled in (S)ingle or (D)ouble precision or (B)oth.
+ Which precision do you require for the installed subset (D/s/b) ? b
+ Installing the double precision version
+ compiling in /home/qyx/cutest/cutest/src with the comand
+ /usr/bin/make -s -f /home/qyx/cutest/cutest/makefiles/pc.lnx.gfo all
+ Compiling cutest         		[ OK ]
+ Compiling pname          		[ OK ]
+ Compiling probname       		[ OK ]
+ Compiling varnames       		[ OK ]
+ Compiling newthread      		[ OK ]
+ Compiling problem        		[ OK ]
+ Compiling fortran_ops    		[ OK ]
+ Compiling interface      		[ OK ]
+ Compiling ccutest        		In file included from ccutest.c:14:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ Compiling timings        		[ OK ]
+ Compiling usetup         		[ OK ]
+ Compiling udimen         		[ OK ]
+ Compiling udimse         		[ OK ]
+ Compiling udimsh         		[ OK ]
+ Compiling unames         		[ OK ]
+ Compiling uvartype       		[ OK ]
+ Compiling ufn            		[ OK ]
+ Compiling ugr            		[ OK ]
+ Compiling uofg           		[ OK ]
+ Compiling udh            		[ OK ]
+ Compiling ugrdh          		[ OK ]
+ Compiling ush            		[ OK ]
+ Compiling ushp           		[ OK ]
+ Compiling ueh            		[ OK ]
+ Compiling ugreh          		[ OK ]
+ Compiling ugrsh          		[ OK ]
+ Compiling uhprod         		[ OK ]
+ Compiling ushprod        		[ OK ]
+ Compiling ubandh         		[ OK ]
+ Compiling ureport        		[ OK ]
+ Compiling uterminate     		[ OK ]
+ Compiling csetup         		[ OK ]
+ Compiling cdimen         		[ OK ]
+ Compiling cdimse         		[ OK ]
+ Compiling cdimsh         		[ OK ]
+ Compiling cdimsj         		[ OK ]
+ Compiling cdimchp        		[ OK ]
+ Compiling cnames         		[ OK ]
+ Compiling cvartype       		[ OK ]
+ Compiling cfn            		[ OK ]
+ Compiling cgr            		[ OK ]
+ Compiling cofg           		[ OK ]
+ Compiling cofsg          		[ OK ]
+ Compiling ccfg           		[ OK ]
+ Compiling clfg           		[ OK ]
+ Compiling ccfsg          		[ OK ]
+ Compiling ccifg          		[ OK ]
+ Compiling ccifsg         		[ OK ]
+ Compiling cdh            		[ OK ]
+ Compiling cdhc           		[ OK ]
+ Compiling ceh            		[ OK ]
+ Compiling cgrdh          		[ OK ]
+ Compiling cifn           		[ OK ]
+ Compiling cigr           		[ OK ]
+ Compiling cisgr          		[ OK ]
+ Compiling cidh           		[ OK ]
+ Compiling csh            		[ OK ]
+ Compiling cshc           		[ OK ]
+ Compiling cshp           		[ OK ]
+ Compiling cish           		[ OK ]
+ Compiling cjprod         		[ OK ]
+ Compiling cstats         		[ OK ]
+ Compiling csgr           		[ OK ]
+ Compiling csgreh         		[ OK ]
+ Compiling csgrsh         		[ OK ]
+ Compiling csjprod        		[ OK ]
+ Compiling chprod         		[ OK ]
+ Compiling chcprod        		[ OK ]
+ Compiling cshprod        		[ OK ]
+ Compiling cshcprod       		[ OK ]
+ Compiling cchprods       		[ OK ]
+ Compiling csjp           		[ OK ]
+ Compiling csgrp          		[ OK ]
+ Compiling csgrshp        		[ OK ]
+ Compiling cchprodsp      		[ OK ]
+ Compiling creport        		[ OK ]
+ Compiling connames       		[ OK ]
+ Compiling cterminate     		[ OK ]
+ Compiling lqp            		[ OK ]
+ Compiling cconst         		[ OK ]
+ CUTEST: tools (double precision version) compiled successfully
+ Compiling algencan_main  		[ OK ]
+ CUTEst: algencan (double precision version) compiled successfully
+ Compiling bobyqa_main    		[ OK ]
+ CUTEst: bobyqa (double precision version) compiled successfully
+ Compiling cg_descent_main		In file included from cg_descent_main.c:29:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: cg_descent (double precision version) compiled successfully
+ Compiling cgplus_main    		[ OK ]
+ CUTEst: cgplus (double precision version) compiled successfully
+ Compiling cobyla_main    		[ OK ]
+ CUTEst: cobyla (double precision version) compiled successfully
+ Compiling derchk_main    		In file included from derchk_main.c:23:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: derchk (double precision version) compiled successfully
+ Compiling dfo_main       		[ OK ]
+ CUTEst: dfo (double precision version) compiled successfully
+ Compiling directsearch_main		[ OK ]
+ CUTEst: directsearch (double precision version) compiled successfully
+ Compiling e04nqf_main    		[ OK ]
+ CUTEst: e04nqf (double precision version) compiled successfully
+ Compiling filtersd_main  		[ OK ]
+ CUTEst: filtersd (double precision version) compiled successfully
+ Compiling filtersqp_main 		[ OK ]
+ CUTEst: filtersqp (double precision version) compiled successfully
+ Compiling gen77          		[ OK ]
+ Compiling gen77_main     		[ OK ]
+ CUTEst: gen77 (double precision version) compiled successfully
+ Compiling gen90          		[ OK ]
+ Compiling gen90_main     		[ OK ]
+ CUTEst: gen90 (double precision version) compiled successfully
+ Compiling genc           		In file included from genc.c:12:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ Compiling genc_main      		In file included from genc_main.c:23:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: genc (double precision version) compiled successfully
+ Compiling hrb_main       		[ OK ]
+ CUTEst: hrb (double precision version) compiled successfully
+ Compiling ipopt_main     		[ OK ]
+ CUTEst: ipopt (double precision version) compiled successfully
+ Compiling knitro_main    		In file included from knitro_main.c:21:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: knitro (double precision version) compiled successfully
+ Compiling la04_main      		[ OK ]
+ CUTEst: la04 (double precision version) compiled successfully
+ Compiling lbfgs_main     		[ OK ]
+ CUTEst: lbfgs (double precision version) compiled successfully
+ Compiling lbfgsb_main    		[ OK ]
+ CUTEst: lbfgsb (double precision version) compiled successfully
+ Compiling lincoa_main    		[ OK ]
+ CUTEst: lincoa (double precision version) compiled successfully
+ Compiling loqo_main      		In file included from loqo_main.c:25:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: loqo (double precision version) compiled successfully
+ Compiling minos_main     		[ OK ]
+ CUTEst: minos (double precision version) compiled successfully
+ Compiling newuoa_main    		[ OK ]
+ CUTEst: newuoa (double precision version) compiled successfully
+ Compiling nitsol_main    		[ OK ]
+ CUTEst: nitsol (double precision version) compiled successfully
+ Compiling nlpqlp_main    		[ OK ]
+ CUTEst: nlpqlp (double precision version) compiled successfully
+ Compiling npsol_main     		[ OK ]
+ CUTEst: npsol (double precision version) compiled successfully
+ Compiling osqp_main      		osqp_main.c: In function ‘main’:
+osqp_main.c:476:5: warning: implicit declaration of function ‘set_default_settings’; did you mean ‘osqp_set_default_settings’? [-Wimplicit-function-declaration]
+  476 |     set_default_settings(settings);
+      |     ^~~~~~~~~~~~~~~~~~~~
+      |     osqp_set_default_settings
+[ OK ]
+ CUTEst: osqp (double precision version) compiled successfully
+ Compiling pds_main       		[ OK ]
+ CUTEst: pds (double precision version) compiled successfully
+ Compiling pennlp_main    		[ OK ]
+ CUTEst: pennlp (double precision version) compiled successfully
+ Compiling praxis_main    		[ OK ]
+ CUTEst: praxis (double precision version) compiled successfully
+ Compiling ql_main        		[ OK ]
+ CUTEst: ql (double precision version) compiled successfully
+ Compiling qplib_main     		[ OK ]
+ CUTEst: qplib (double precision version) compiled successfully
+ Compiling snopt_main     		[ OK ]
+ CUTEst: snopt (double precision version) compiled successfully
+ Compiling spg_main       		[ OK ]
+ CUTEst: spg (double precision version) compiled successfully
+ Compiling stats_main     		[ OK ]
+ CUTEst: stats (double precision version) compiled successfully
+ Compiling stenmin_main   		[ OK ]
+ CUTEst: stenmin (double precision version) compiled successfully
+ Compiling tenmin_main    		[ OK ]
+ CUTEst: tenmin (double precision version) compiled successfully
+ Compiling test_main      		[ OK ]
+ CUTEst: test (double precision version) compiled successfully
+ Compiling tron_main      		[ OK ]
+ CUTEst: tron (double precision version) compiled successfully
+ Compiling uncmin_main    		[ OK ]
+ CUTEst: uncmin (double precision version) compiled successfully
+ Compiling vf13_main      		[ OK ]
+ CUTEst: vf13 (double precision version) compiled successfully
+ Compiling worhp_main     		In file included from worhp_main.c:12:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: worhp (double precision version) compiled successfully
+
+ Installing the single precision version
+ compiling in /home/qyx/cutest/cutest/src with the comand
+ /usr/bin/make -s -f /home/qyx/cutest/cutest/makefiles/pc.lnx.gfo all
+ Compiling cutest         		[ OK ]
+ Compiling pname          		[ OK ]
+ Compiling probname       		[ OK ]
+ Compiling varnames       		[ OK ]
+ Compiling newthread      		[ OK ]
+ Compiling problem        		[ OK ]
+ Compiling fortran_ops    		[ OK ]
+ Compiling interface      		[ OK ]
+ Compiling ccutest        		In file included from ccutest.c:14:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ Compiling timings        		[ OK ]
+ Compiling usetup         		[ OK ]
+ Compiling udimen         		[ OK ]
+ Compiling udimse         		[ OK ]
+ Compiling udimsh         		[ OK ]
+ Compiling unames         		[ OK ]
+ Compiling uvartype       		[ OK ]
+ Compiling ufn            		[ OK ]
+ Compiling ugr            		[ OK ]
+ Compiling uofg           		[ OK ]
+ Compiling udh            		[ OK ]
+ Compiling ugrdh          		[ OK ]
+ Compiling ush            		[ OK ]
+ Compiling ushp           		[ OK ]
+ Compiling ueh            		[ OK ]
+ Compiling ugreh          		[ OK ]
+ Compiling ugrsh          		[ OK ]
+ Compiling uhprod         		[ OK ]
+ Compiling ushprod        		[ OK ]
+ Compiling ubandh         		[ OK ]
+ Compiling ureport        		[ OK ]
+ Compiling uterminate     		[ OK ]
+ Compiling csetup         		[ OK ]
+ Compiling cdimen         		[ OK ]
+ Compiling cdimse         		[ OK ]
+ Compiling cdimsh         		[ OK ]
+ Compiling cdimsj         		[ OK ]
+ Compiling cdimchp        		[ OK ]
+ Compiling cnames         		[ OK ]
+ Compiling cvartype       		[ OK ]
+ Compiling cfn            		[ OK ]
+ Compiling cgr            		[ OK ]
+ Compiling cofg           		[ OK ]
+ Compiling cofsg          		[ OK ]
+ Compiling ccfg           		[ OK ]
+ Compiling clfg           		[ OK ]
+ Compiling ccfsg          		[ OK ]
+ Compiling ccifg          		[ OK ]
+ Compiling ccifsg         		[ OK ]
+ Compiling cdh            		[ OK ]
+ Compiling cdhc           		[ OK ]
+ Compiling ceh            		[ OK ]
+ Compiling cgrdh          		[ OK ]
+ Compiling cifn           		[ OK ]
+ Compiling cigr           		[ OK ]
+ Compiling cisgr          		[ OK ]
+ Compiling cidh           		[ OK ]
+ Compiling csh            		[ OK ]
+ Compiling cshc           		[ OK ]
+ Compiling cshp           		[ OK ]
+ Compiling cish           		[ OK ]
+ Compiling cjprod         		[ OK ]
+ Compiling cstats         		[ OK ]
+ Compiling csgr           		[ OK ]
+ Compiling csgreh         		[ OK ]
+ Compiling csgrsh         		[ OK ]
+ Compiling csjprod        		[ OK ]
+ Compiling chprod         		[ OK ]
+ Compiling chcprod        		[ OK ]
+ Compiling csjp           		[ OK ]
+ Compiling csgrp          		[ OK ]
+ Compiling csgrshp        		[ OK ]
+ Compiling cchprodsp      		[ OK ]
+ Compiling cshprod        		[ OK ]
+ Compiling cshcprod       		[ OK ]
+ Compiling cchprods       		[ OK ]
+ Compiling creport        		[ OK ]
+ Compiling connames       		[ OK ]
+ Compiling cterminate     		[ OK ]
+ Compiling lqp            		[ OK ]
+ Compiling cconst         		[ OK ]
+ CUTEST: tools (single precision version) compiled successfully
+ Compiling algencan_main  		[ OK ]
+ CUTEst: algencan (single precision version) compiled successfully
+ Compiling bobyqa_main    		[ OK ]
+ CUTEst: bobyqa (single precision version) compiled successfully
+ Compiling cg_descent_main		In file included from cg_descent_main.c:29:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: cg_descent (single precision version) compiled successfully
+ Compiling cgplus_main    		[ OK ]
+ CUTEst: cgplus (single precision version) compiled successfully
+ Compiling cobyla_main    		[ OK ]
+ CUTEst: cobyla (single precision version) compiled successfully
+ Compiling derchk_main    		In file included from derchk_main.c:23:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: derchk (single precision version) compiled successfully
+ Compiling dfo_main       		[ OK ]
+ CUTEst: dfo (single precision version) compiled successfully
+ Compiling directsearch_main		[ OK ]
+ CUTEst: directsearch (single precision version) compiled successfully
+ Compiling e04nqf_main    		[ OK ]
+ CUTEst: e04nqf (single precision version) compiled successfully
+ Compiling filtersd_main  		[ OK ]
+ CUTEst: filtersd (single precision version) compiled successfully
+ Compiling filtersqp_main 		[ OK ]
+ CUTEst: filtersqp (single precision version) compiled successfully
+ Compiling gen77          		[ OK ]
+ Compiling gen77_main     		[ OK ]
+ CUTEst: gen77 (single precision version) compiled successfully
+ Compiling gen90          		[ OK ]
+ Compiling gen90_main     		[ OK ]
+ CUTEst: gen90 (single precision version) compiled successfully
+ Compiling genc           		In file included from genc.c:12:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ Compiling genc_main      		In file included from genc_main.c:23:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: genc (single precision version) compiled successfully
+ Compiling hrb_main       		[ OK ]
+ CUTEst: hrb (single precision version) compiled successfully
+ Compiling ipopt_main     		[ OK ]
+ CUTEst: ipopt (single precision version) compiled successfully
+ Compiling knitro_main    		In file included from knitro_main.c:21:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: knitro (single precision version) compiled successfully
+ Compiling la04_main      		[ OK ]
+ CUTEst: la04 (single precision version) compiled successfully
+ Compiling lbfgs_main     		[ OK ]
+ CUTEst: lbfgs (single precision version) compiled successfully
+ Compiling lbfgsb_main    		[ OK ]
+ CUTEst: lbfgsb (single precision version) compiled successfully
+ Compiling lincoa_main    		[ OK ]
+ CUTEst: lincoa (single precision version) compiled successfully
+ Compiling loqo_main      		In file included from loqo_main.c:25:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: loqo (single precision version) compiled successfully
+ Compiling minos_main     		[ OK ]
+ CUTEst: minos (single precision version) compiled successfully
+ Compiling newuoa_main    		[ OK ]
+ CUTEst: newuoa (single precision version) compiled successfully
+ Compiling nitsol_main    		[ OK ]
+ CUTEst: nitsol (single precision version) compiled successfully
+ Compiling nlpqlp_main    		[ OK ]
+ CUTEst: nlpqlp (single precision version) compiled successfully
+ Compiling npsol_main     		[ OK ]
+ CUTEst: npsol (single precision version) compiled successfully
+ Compiling osqp_main      		osqp_main.c: In function ‘main’:
+osqp_main.c:476:5: warning: implicit declaration of function ‘set_default_settings’; did you mean ‘osqp_set_default_settings’? [-Wimplicit-function-declaration]
+  476 |     set_default_settings(settings);
+      |     ^~~~~~~~~~~~~~~~~~~~
+      |     osqp_set_default_settings
+[ OK ]
+ CUTEst: osqp (single precision version) compiled successfully
+ Compiling pds_main       		[ OK ]
+ CUTEst: pds (single precision version) compiled successfully
+ Compiling pennlp_main    		[ OK ]
+ CUTEst: pennlp (single precision version) compiled successfully
+ Compiling praxis_main    		[ OK ]
+ CUTEst: praxis (single precision version) compiled successfully
+ Compiling ql_main        		[ OK ]
+ CUTEst: ql (single precision version) compiled successfully
+ Compiling snopt_main     		[ OK ]
+ CUTEst: snopt (single precision version) compiled successfully
+ Compiling spg_main       		[ OK ]
+ CUTEst: spg (single precision version) compiled successfully
+ Compiling stats_main     		[ OK ]
+ CUTEst: stats (single precision version) compiled successfully
+ Compiling stenmin_main   		[ OK ]
+ CUTEst: stenmin (single precision version) compiled successfully
+ Compiling tenmin_main    		[ OK ]
+ CUTEst: tenmin (single precision version) compiled successfully
+ Compiling test_main      		[ OK ]
+ CUTEst: test (single precision version) compiled successfully
+ Compiling tron_main      		[ OK ]
+ CUTEst: tron (single precision version) compiled successfully
+ Compiling uncmin_main    		[ OK ]
+ CUTEst: uncmin (single precision version) compiled successfully
+ Compiling vf13_main      		[ OK ]
+ CUTEst: vf13 (single precision version) compiled successfully
+ Compiling worhp_main     		In file included from worhp_main.c:12:
+/home/qyx/cutest/cutest/include/cutest.h:51:9: warning: ISO C90 does not support boolean types [-Wpedantic]
+   51 | typedef _Bool    logical;
+      |         ^~~~~
+[ OK ]
+ CUTEst: worhp (single precision version) compiled successfully
+
+ SUCCESS: CUTEst successfully installed
+
+
+ SUCCESS: All builds succeeded!
+
+
+ ----------------- for csh/tcsh users -----------------------------
+
+ You should now add the following to your .cshrc file:
+
+ setenv ARCHDEFS /home/qyx/cutest/archdefs
+ setenv SIFDECODE /home/qyx/cutest/sifdecode
+ setenv CUTEST /home/qyx/cutest/cutest
+ set path=(${SIFDECODE}/bin $path)
+ set path=(${CUTEST}/bin $path)
+ setenv MANPATH ${SIFDECODE}/man:${MANPATH}
+ setenv MANPATH ${CUTEST}/man:${MANPATH}
+
+ Optionally, if you also wish this to be your default version, set
+
+ setenv MYARCH pc.lnx.gfo
+
+ Finally, remember to setenv MASTSIF to your SIF test-problem directory
+
+ ----------------- for sh/bash users -----------------------------
+
+ You should now add the following to your .bashrc file:
+
+ export ARCHDEFS="/home/qyx/cutest/archdefs"
+ export SIFDECODE="/home/qyx/cutest/sifdecode"
+ export CUTEST="/home/qyx/cutest/cutest"
+ export PATH="${SIFDECODE}/bin:${PATH}"
+ export PATH="${CUTEST}/bin:${PATH}"
+ export MANPATH="${SIFDECODE}/man:${MANPATH}"
+ export MANPATH="${CUTEST}/man:${MANPATH}"
+
+ Optionally, if you also wish this to be your default version, add
+
+ export MYARCH="pc.lnx.gfo"
+
+ Finally, remember to export MASTSIF="" to your SIF test-problem directory
