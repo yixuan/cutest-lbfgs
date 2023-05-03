@@ -87,11 +87,12 @@ export MYARCH="pc.lnx.gfo"
 This section is useful if you want to retrieve the CUTEst problems
 by yourself. I have already packed a set of problems suitable for
 L-BFGS and L-BFGS-B algorithms in this
-[compressed file](#).
+[compressed file](https://github.com/yixuan/cutest-lbfgs/releases/download/v0.1.0/cutest-problems.tar.xz).
 You can skip the rest of this section if you only want to work with
 these problems:
 
 ```bash
+wget https://github.com/yixuan/cutest-lbfgs/releases/download/v0.1.0/cutest-problems.tar.xz
 tar -xf cutest-problems.tar.xz
 ```
 
