@@ -1,3 +1,6 @@
+// Copyright (C) 2023 Yixuan Qiu <yixuan.qiu@cos.name>
+// Under MIT license
+
 #ifndef CUTEST_INTERFACE_H
 #define CUTEST_INTERFACE_H
 

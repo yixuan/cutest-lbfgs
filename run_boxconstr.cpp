@@ -1,3 +1,6 @@
+// Copyright (C) 2023 Yixuan Qiu <yixuan.qiu@cos.name>
+// Under MIT license
+
 #include "interface.h"
 
 int main()

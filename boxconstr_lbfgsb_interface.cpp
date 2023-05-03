@@ -1,3 +1,6 @@
+// Copyright (C) 2023 Yixuan Qiu <yixuan.qiu@cos.name>
+// Under MIT license
+
 #include "interface.h"
 
 void boxconstr_lbfgsb_stat(CUTEstStat& stat, bool verbose)
