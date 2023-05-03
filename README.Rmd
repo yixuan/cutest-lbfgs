@@ -100,7 +100,6 @@ You can skip the rest of this section if you only want to work with
 these problems:
 
 ```bash
-wget
 tar -xf cutest-problems.tar.xz
 ```
 
@@ -244,7 +243,8 @@ make run > logs/run.log
 
 ## Summarizing the results
 
-Some preliminary results are given in [this page](#). The important data are:
+Some preliminary results are given in
+[this page](https://lbfgspp.statr.me/benchmark/). The important data are:
 
 1. Whether the solver fails on a specific problem (some objective functions are indeed ill-posed or ill-conditioned).
 2. Number of iterations of an algorithm.
