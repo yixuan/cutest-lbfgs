@@ -1,0 +1,79 @@
+---
+title: "Analyzing Benchmark Logs"
+author: "Yixuan Qiu"
+date: "`r Sys.Date()`"
+# output: html_document
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+
+# Parsing Log Data
+
+```{r message=FALSE}
+library(jsonlite)
+library(dplyr)
+
+# Read log
+dat = readLines("logs/run_20230503.log")
+# Remove messages other than data
+dat = grep("^[{}]|^  ", dat, value = TRUE)
+# Make the log a legal JSON file
+dat = gsub("}", "},", dat)
+last_bracket = tail(grep("},", dat), 1)
+dat[last_bracket] = "}"
+dat = c("[", dat, "]")
+# Some null values are actually infinity, so we replace them with a large value
+dat = gsub("null", "1e300", dat)
+
+# Parse JSON
+dat = parse_json(dat)
+dat = do.call(rbind, lapply(dat, as_tibble))
+
+# Clean data
+dat = dat %>% filter(flag != 2) %>%
+    mutate(fail = flag) %>%
+    select(alg, problem, nvar, solver, fail, niter, nfun,
+           objval, proj_grad, solve_time, msg) %>%
+    mutate(niter = ifelse(fail, NA, niter),
+           nfun = ifelse(fail, NA, nfun),
+           objval = ifelse(fail, NA, objval),
+           proj_grad = ifelse(fail, NA, proj_grad),
+           solve_time = ifelse(fail, NA, solve_time * 1000)) %>%
+    mutate(fail = ifelse(fail, "<span style=\"color:red\">1</span>", "0"))
+```
+
+# L-BFGS Solvers
+
+The variables in the table are as follows:
+
+1. `problem`: Name of the optimization problem.
+2. `nvar`: Number of variables of the problem.
+3. `solver`: The solver used. "Classic" stands for the Fortran code.
+4. `fail`: Whether the solver fails on a specific problem. Some objective functions are indeed ill-posed or ill-conditioned.
+5. `niter`: Number of iterations of an algorithm.
+6. `nfun`: Number of function evaluations used.
+7. `objval`: The final objective function value.
+8. `proj_grad`: The final (projected) gradient norm.
+9. `solve_time`: Running time of the solver, in milliseconds.
+10. `msg`: Error messages.
+
+```{r}
+library(DT)
+lbfgs = dat %>% filter(alg == "L-BFGS") %>% select(-alg)
+opts = list(pageLength = 20, scrollX = TRUE, autoWidth = TRUE,
+            columnDefs = list(list(width = "300px", targets = ncol(lbfgs) - 1)))
+datatable(lbfgs, options = opts, rownames = FALSE, escape = FALSE) %>%
+    formatSignif(columns = c("objval", "proj_grad", "solve_time"),
+                 digits = 5, interval = 999)
+```
+
+# L-BFGS-B Solvers
+
+```{r}
+lbfgsb = dat %>% filter(alg == "L-BFGS-B") %>% select(-alg)
+datatable(lbfgsb, options = opts, rownames = FALSE, escape = FALSE) %>%
+    formatSignif(columns = c("objval", "proj_grad", "solve_time"),
+                 digits = 5, interval = 999)
+```
