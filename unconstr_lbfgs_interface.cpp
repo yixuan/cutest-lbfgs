@@ -89,7 +89,8 @@ void unconstr_lbfgs_stat(CUTEstStat& stat, bool verbose)
 
     // Algorithm parameters
     const integer param_m = 6;
-    const integer param_maxit = 10000;
+    // For very large problems, restrict to 1000 iterations
+    const integer param_maxit = (CUTEst_nvar < 50000) ? 10000 : 1000;
     const doublereal param_eps = 1e-5;
     // Machine precision
     const doublereal param_xtol = std::numeric_limits<doublereal>::epsilon();
@@ -151,7 +152,7 @@ void unconstr_lbfgs_stat(CUTEstStat& stat, bool verbose)
 
     stat.prob = std::string(prob_name);
     stat.nvar = CUTEst_nvar;
-    stat.niter = i + 1;
+    stat.niter = std::min(i + 1, param_maxit);
     stat.nfun = calls[0];
     stat.objval = fx;
     stat.proj_grad = grad.norm();

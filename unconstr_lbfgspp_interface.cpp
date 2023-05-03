@@ -90,7 +90,8 @@ void unconstr_lbfgspp_stat(CUTEstStat& stat, bool verbose)
     // Set up LBFGS++ parameters
     LBFGSParam<doublereal> param;
     param.m = 6;
-    param.max_iterations = 10000;
+    // For very large problems, restrict to 1000 iterations
+    param.max_iterations = (CUTEst_nvar < 50000) ? 10000 : 1000;
     param.epsilon = 1e-5;
     param.epsilon_rel = 1e-5;
     param.past = 0;
