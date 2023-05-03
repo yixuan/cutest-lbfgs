@@ -37,7 +37,7 @@ void unconstr_lbfgs_stat(CUTEstStat& stat, bool verbose)
     if(CUTEst_nconstr > 0)
     {
         stat.flag = 2;
-        stat.msg = "Problem contains general constrints.";
+        stat.msg = "Problem contains general constraints.";
         return;
     }
     if(verbose)
